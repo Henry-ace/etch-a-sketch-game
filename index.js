@@ -3,81 +3,125 @@
 
 
 
+
+
 /* VARIABLE */
 const resolution = document.querySelector('.resolution');
 const gridContainer = document.querySelector('.grid-container');
 const submitBtn = document.querySelector('.submit-btn');
 const colorPicker = document.querySelector('#color-picker');
-const gridOpacity = document.querySelector('.grid-btn');
-const grids = document.querySelectorAll('.grid');
+const message = document.querySelector('.message')
+const blackBtn = document.querySelector('#black-btn');
+const eraserBtn = document.querySelector('#eraser-btn');
+const randomColorBtn = document.querySelector('#random-color-btn');
+const resetBtn = document.querySelector('#reset-btn');
+
+let resolutionValue = resolution.value;
 
 
+/* function creates grid */
+function createGrid() {
 
 
-
-/* varaibles for grid area width, height and grid size */
-const GRIDWIDTH = 700;
-const GRIDHEIGHT = 500;
-let cols = 15;
+   let resolutionValue = resolution.value;
 
 
-/* styling grid-area */
-gridContainer.style.height = `${GRIDHEIGHT}px`
-gridContainer.style.width = `${GRIDWIDTH}px`
+   gridContainer.style.gridTemplateColumns = `repeat(${resolutionValue}, 1fr)`;
+   gridContainer.style.gridTemplateRows = `repeat(${resolutionValue}, 1fr)`;
 
 
+   let divNum = resolutionValue * resolutionValue;
 
+   for(let i = 0; i < divNum; i++) {
+      
+      let grid = document.createElement('div');
+      gridContainer.appendChild(grid);
+      grid.classList.add('grid');
 
+      blackBackground();
+      eraseBackground();
+      randomColorBackground();
+      resetBackground();
+      
+   
 
-
-/*  function that creates the grids */
-function createsGrid() {
-   const resolution = (cols * cols)
-   for(let i = 0; i < resolution; i++) {
-      let grid = document.createElement('div')
-      grid.style.width = `${(GRIDWIDTH / cols)}px`;
-      grid.style.height = `${(GRIDHEIGHT / cols)}px`;
-      grid.classList.add('grid')
-      gridContainer.append(grid)
-
+     
 
    }
 }
 
-/* function that removes grid*/
+
+/*removes grids */
 function removeGrid() {
    while(gridContainer.hasChildNodes()) {
-      gridContainer.removeChild(gridContainer.firstChild);
+      gridContainer.removeChild(gridContainer.firstChild)
    }
 }
 
-
-/*event listn for that displays te grids*/
-submitBtn.addEventListener('click', function() {
-   cols = resolution.value;
-   if(gridContainer.hasChildNodes()) {
+/*buttons that adds grid */
+submitBtn.addEventListener('click', () => {
+   if(gridContainer.hasChildNodes()){
       removeGrid()
    }else {
-      createsGrid()
-   }
-   
-})
-
-
-/*event listener to change the background */
-gridContainer.addEventListener('mouseover', function(e) {
-   target = e.target
-   if(target.classList.contains('grid')) {
-      target.style.backgroundColor = colorPicker.value;
+      createGrid()
+     
    }
 })
 
 
-/* function for grid opacity change */
 
-function gridOpacityChange( ) {
-   if(gridContainer.hasChildNodes()){
-      grids.style.border = `1px solid white`;
-}}
+/*create background color btn */
+function blackBackground() {
+   let grid = gridContainer.querySelectorAll('.grid');
 
-3
+
+   blackBtn.addEventListener('click', () => {
+      grid.forEach(element => element.addEventListener('mouseover', (e) => {
+         element.style.backgroundColor = 'black';
+      }),
+   )
+   })
+}
+
+/*create eraser btn */
+function eraseBackground() {
+   let grid = gridContainer.querySelectorAll('.grid');
+
+   eraserBtn.addEventListener('click', () => {
+      grid.forEach(element => element.addEventListener('mouseover', (e) => {
+         element.style.backgroundColor = 'white';
+      }),
+   )
+   })
+}
+
+/*create random color btn */
+function randomColorBackground() {
+   let grid = gridContainer.querySelectorAll('.grid');
+
+   randomColorBtn.addEventListener('click', () => {
+      grid.forEach(element => element.addEventListener('mouseover', (e) => {
+         let R = Math.floor(Math.random() * 255);
+         let G = Math.floor(Math.random() * 255);
+         let B = Math.floor(Math.random() * 255);
+         element.style.backgroundColor = `rgba(${R},${G},${B})`;
+      }),
+   )
+   })
+}
+
+
+
+
+/*create reset btn */
+function resetBackground() {
+   let grid = gridContainer.querySelectorAll('.grid');
+
+   resetBtn.addEventListener('click', () => {
+     if(gridContainer.hasChildNodes()) {
+         while(gridContainer.hasChildNodes()) {
+            gridContainer.removeChild(gridContainer.firstChild);
+      }}
+     resolution.value = ''; 
+   })
+}
